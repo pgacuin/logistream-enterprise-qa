@@ -1,14 +1,18 @@
 import { test as base } from '@playwright/test';
 import { DispatchPage } from '../pages/DispatchPage';
+import { CustomsGatePage } from '../pages/CustomsGatePage';
 
 type LogiStreamFixtures = {
   dispatchPage: DispatchPage;
+  customsGatePage: CustomsGatePage;
 };
 
-// TODO FOR LEARNER: Extend 'base' with LogiStreamFixtures to instantiate and provide 'dispatchPage'
 export const test = base.extend<LogiStreamFixtures>({
   dispatchPage: async ({ page }, use) => {
-    // Instantiate DispatchPage and pass it to use()
+    await use(new DispatchPage(page));
+  },
+  customsGatePage: async ({ page }, use) => {
+    await use(new CustomsGatePage(page));
   },
 });
 
