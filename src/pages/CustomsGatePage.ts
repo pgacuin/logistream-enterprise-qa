@@ -9,17 +9,19 @@ export class CustomsGatePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.clearanceStatusBadge = page.locator('[data-testid="clearance-status"]');
-    this.approveCustomsButton = page.locator('[data-testid="btn-approve-customs"]');
-    this.gatewayErrorBanner = page.locator('[data-testid="alert-gateway-error"]');
-    this.retrySyncButton = page.locator('[data-testid="btn-retry-sync"]');
+    // TODO FOR LEARNER: Initialize locators using data-testid attributes:
+    // clearance-status, btn-approve-customs, alert-gateway-error, btn-retry-sync
+    this.clearanceStatusBadge = page.locator('');
+    this.approveCustomsButton = page.locator('');
+    this.gatewayErrorBanner = page.locator('');
+    this.retrySyncButton = page.locator('');
   }
 
   async gotoShipment(shipmentId: string): Promise<void> {
-    await this.page.goto(`/shipments/${shipmentId}/customs`);
+    // TODO FOR LEARNER: Navigate to `/shipments/${shipmentId}/customs`
   }
 
   async approveClearance(): Promise<void> {
-    await this.approveCustomsButton.click();
+    // TODO FOR LEARNER: Click the approveCustomsButton
   }
 }
