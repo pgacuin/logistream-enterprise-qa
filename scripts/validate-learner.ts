@@ -3,19 +3,15 @@ import path from 'path';
 import { execSync } from 'child_process';
 
 console.log('====================================================');
-console.log('  LogiStream Mid-Level Lab - Mission 01 Validator');
+console.log('  LogiStream Mid-Level Lab - Mission 02 Validator');
 console.log('====================================================\n');
 
 let score = 0;
-const totalPoints = 100;
 
 const requiredFiles = [
-  'tsconfig.json',
-  'playwright.config.ts',
-  'tests/auth.setup.ts',
-  'src/pages/DispatchPage.ts',
+  'src/pages/CustomsGatePage.ts',
   'src/fixtures/baseFixtures.ts',
-  'tests/dispatch-dashboard.spec.ts'
+  'tests/customs-uat.spec.ts'
 ];
 
 for (const file of requiredFiles) {
@@ -38,38 +34,37 @@ for (const file of requiredFiles) {
 console.log('✅ All required TypeScript files present and free of TODOs or hardcoded waits.');
 score += 20;
 
-console.log('🔍 Running TypeScript compiler check (tsc --noEmit)...');
 try {
   execSync('npx tsc --noEmit', { stdio: 'inherit' });
-  console.log('✅ TypeScript strict type-checking passed.');
+  console.log('✅ TypeScript strict type-checking passed (tsc --noEmit).');
   score += 20;
 } catch {
-  console.error('❌ TypeScript compilation failed. Fix type errors before validating.');
+  console.error('❌ TypeScript compilation failed.');
   process.exit(1);
 }
 
-const fixtureContent = fs.readFileSync(path.join(__dirname, '..', 'src/fixtures/baseFixtures.ts'), 'utf8');
-if (!fixtureContent.includes('base.extend') || !fixtureContent.includes('new DispatchPage')) {
-  console.error('❌ Architecture Check Failed: baseFixtures.ts must extend Playwright base test and instantiate DispatchPage.');
+const specContent = fs.readFileSync(path.join(__dirname, '..', 'tests/customs-uat.spec.ts'), 'utf8');
+if (!specContent.includes('request.post') || !specContent.includes('page.route')) {
+  console.error('❌ Architecture Check Failed: customs-uat.spec.ts must use request.post() for seeding and page.route() for fault injection.');
   process.exit(1);
 }
-console.log('✅ Custom Playwright Fixture architecture verified (METL).');
-score += 10;
+console.log('✅ API State Seeding (request.post) & Fault Injection (page.route) verified.');
+score += 20;
 
-console.log('\n🚀 Executing Auth Setup & Authenticated Chromium Project...');
+console.log('\n🚀 Executing Customs UAT & Network Resilience Suite...');
 try {
-  execSync('npx playwright test', { stdio: 'inherit' });
-  score += 50;
+  execSync('npx playwright test tests/customs-uat.spec.ts', { stdio: 'inherit' });
+  score += 40;
 } catch {
   console.error('\n❌ Playwright test execution failed.');
 }
 
 console.log(`\n====================================================`);
-console.log(`  FINAL GRADE: ${score} / ${totalPoints}`);
+console.log(`  FINAL GRADE: ${score} / 100`);
 console.log(`====================================================`);
 
 if (score === 100) {
-  console.log('\n🏆 MISSION 01 ACHIEVED (SFIA Level 3–4: METL & TEST)');
+  console.log('\n🏆 MISSION 02 ACHIEVED (SFIA Level 3–4: BPTS & TEST)');
   process.exit(0);
 } else {
   process.exit(1);
