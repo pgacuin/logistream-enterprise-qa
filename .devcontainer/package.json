@@ -1,1 +1,15 @@
 
+{
+  "name": "logistream-enterprise-qa",
+  "version": "2.0.0",
+  "description": "Mid-Level Enterprise QA Automation Framework - LogiStream",
+  "scripts": {
+    "test": "playwright test",
+    "validate": "ts-node scripts/validate-learner.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  }
+}
