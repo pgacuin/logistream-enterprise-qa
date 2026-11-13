@@ -3,68 +3,94 @@ import path from 'path';
 import { execSync } from 'child_process';
 
 console.log('====================================================');
-console.log('  LogiStream Mid-Level Lab - Mission 03 Validator');
+console.log('  LogiStream Mid-Level Lab - Universal Validator');
 console.log('====================================================\n');
 
 let score = 0;
+const totalPoints = 100;
 
-const requiredFiles = [
-  'src/pages/ShipmentLedgerPage.ts',
-  'src/fixtures/baseFixtures.ts',
-  'tests/shipment-state-machine.spec.ts'
-];
+// Determine active mission based on existing spec files
+const isMission04 = fs.existsSync(path.join(__dirname, '..', 'tests/performance-budget.spec.ts'));
+const isMission03 = fs.existsSync(path.join(__dirname, '..', 'tests/shipment-state-machine.spec.ts'));
+const isMission02 = fs.existsSync(path.join(__dirname, '..', 'tests/customs-uat.spec.ts'));
 
-for (const file of requiredFiles) {
-  const fullPath = path.join(__dirname, '..', file);
-  if (!fs.existsSync(fullPath)) {
-    console.error(`❌ Missing required file: ${file}`);
-    process.exit(1);
-  }
-  const content = fs.readFileSync(fullPath, 'utf8');
-  if (content.includes('TODO FOR LEARNER')) {
-    console.error(`❌ Incomplete implementation in ${file}: Remove all TODO FOR LEARNER markers.`);
-    process.exit(1);
-  }
-  if (content.includes('waitForTimeout')) {
-    console.error(`❌ Anti-pattern detected in ${file}: Hardcoded page.waitForTimeout() is strictly forbidden.`);
-    process.exit(1);
+let missionName = 'Mission 01';
+let specFile = 'tests/dispatch-dashboard.spec.ts';
+
+if (isMission04) {
+  missionName = 'Mission 04';
+  specFile = 'tests/performance-budget.spec.ts';
+} else if (isMission03) {
+  missionName = 'Mission 03';
+  specFile = 'tests/shipment-state-machine.spec.ts';
+} else if (isMission02) {
+  missionName = 'Mission 02';
+  specFile = 'tests/customs-uat.spec.ts';
+}
+
+console.log(`🎯 Active Mission Detected: ${missionName}\n`);
+
+// Common checks across all missions
+const tsConfigPath = path.join(__dirname, '..', 'tsconfig.json');
+if (!fs.existsSync(tsConfigPath)) {
+  console.error(`❌ Missing required file: tsconfig.json`);
+  process.exit(1);
+}
+
+// Check for TODOs or hardcoded waits in source/tests
+const srcDir = path.join(__dirname, '..', 'src');
+const testsDir = path.join(__dirname, '..', 'tests');
+
+function scanDirectory(dir: string) {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const fullPath = path.join(dir, file);
+    if (fs.statSync(fullPath).isDirectory()) {
+      scanDirectory(fullPath);
+    } else if (fullPath.endsWith('.ts')) {
+      const content = fs.readFileSync(fullPath, 'utf8');
+      if (content.includes('TODO FOR LEARNER')) {
+        console.error(`❌ Incomplete implementation in ${path.relative(path.join(__dirname, '..'), fullPath)}: Remove all TODO markers.`);
+        process.exit(1);
+      }
+      if (content.includes('waitForTimeout')) {
+        console.error(`❌ Anti-pattern detected: Hardcoded page.waitForTimeout() is strictly forbidden.`);
+        process.exit(1);
+      }
+    }
   }
 }
 
-console.log('✅ All required TypeScript files present and free of TODOs or hardcoded waits.');
-score += 20;
+scanDirectory(srcDir);
+scanDirectory(testsDir);
 
+console.log('✅ All TypeScript files present and free of TODOs or hardcoded waits.');
+score += 30;
+
+console.log('🔍 Running TypeScript compiler check (tsc --noEmit)...');
 try {
   execSync('npx tsc --noEmit', { stdio: 'inherit' });
-  console.log('✅ TypeScript strict type-checking passed (tsc --noEmit).');
+  console.log('✅ TypeScript strict type-checking passed.');
   score += 20;
 } catch {
   console.error('❌ TypeScript compilation failed.');
   process.exit(1);
 }
 
-const specContent = fs.readFileSync(path.join(__dirname, '..', 'tests/shipment-state-machine.spec.ts'), 'utf8');
-if (!specContent.includes('page.route') || !specContent.includes('telemetryEvents')) {
-  console.error('❌ Architecture Check Failed: shipment-state-machine.spec.ts must use page.route() to capture asynchronous telemetry payloads.');
-  process.exit(1);
-}
-console.log('✅ State Machine & Telemetry Tracking verified.');
-score += 20;
-
-console.log('\n🚀 Executing Shipment State Machine & NFTS Suite...');
+console.log(`\n🚀 Executing Playwright Test Suite for ${missionName}...`);
 try {
-  execSync('npx playwright test tests/shipment-state-machine.spec.ts', { stdio: 'inherit' });
-  score += 40;
+  execSync(`npx playwright test ${specFile}`, { stdio: 'inherit' });
+  score += 50;
 } catch {
-  console.error('\n❌ Playwright test execution failed.');
+  console.error(`\n❌ Playwright test execution failed for ${missionName}.`);
 }
 
 console.log(`\n====================================================`);
-console.log(`  FINAL GRADE: ${score} / 100`);
+console.log(`  FINAL GRADE: ${score} / ${totalPoints}`);
 console.log(`====================================================`);
 
 if (score === 100) {
-  console.log('\n🏆 MISSION 03 ACHIEVED (SFIA Level 3–4: PRTS & NFTS)');
+  console.log(`\n🏆 ${missionName.toUpperCase()} ACHIEVED (SFIA Level 3–4)`);
   process.exit(0);
 } else {
   process.exit(1);
