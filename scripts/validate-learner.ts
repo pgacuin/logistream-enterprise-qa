@@ -3,15 +3,15 @@ import path from 'path';
 import { execSync } from 'child_process';
 
 console.log('====================================================');
-console.log('  LogiStream Mid-Level Lab - Mission 02 Validator');
+console.log('  LogiStream Mid-Level Lab - Mission 03 Validator');
 console.log('====================================================\n');
 
 let score = 0;
 
 const requiredFiles = [
-  'src/pages/CustomsGatePage.ts',
+  'src/pages/ShipmentLedgerPage.ts',
   'src/fixtures/baseFixtures.ts',
-  'tests/customs-uat.spec.ts'
+  'tests/shipment-state-machine.spec.ts'
 ];
 
 for (const file of requiredFiles) {
@@ -43,17 +43,17 @@ try {
   process.exit(1);
 }
 
-const specContent = fs.readFileSync(path.join(__dirname, '..', 'tests/customs-uat.spec.ts'), 'utf8');
-if (!specContent.includes('request.post') || !specContent.includes('page.route')) {
-  console.error('❌ Architecture Check Failed: customs-uat.spec.ts must use request.post() for seeding and page.route() for fault injection.');
+const specContent = fs.readFileSync(path.join(__dirname, '..', 'tests/shipment-state-machine.spec.ts'), 'utf8');
+if (!specContent.includes('page.route') || !specContent.includes('telemetryEvents')) {
+  console.error('❌ Architecture Check Failed: shipment-state-machine.spec.ts must use page.route() to capture asynchronous telemetry payloads.');
   process.exit(1);
 }
-console.log('✅ API State Seeding (request.post) & Fault Injection (page.route) verified.');
+console.log('✅ State Machine & Telemetry Tracking verified.');
 score += 20;
 
-console.log('\n🚀 Executing Customs UAT & Network Resilience Suite...');
+console.log('\n🚀 Executing Shipment State Machine & NFTS Suite...');
 try {
-  execSync('npx playwright test tests/customs-uat.spec.ts', { stdio: 'inherit' });
+  execSync('npx playwright test tests/shipment-state-machine.spec.ts', { stdio: 'inherit' });
   score += 40;
 } catch {
   console.error('\n❌ Playwright test execution failed.');
@@ -64,7 +64,7 @@ console.log(`  FINAL GRADE: ${score} / 100`);
 console.log(`====================================================`);
 
 if (score === 100) {
-  console.log('\n🏆 MISSION 02 ACHIEVED (SFIA Level 3–4: BPTS & TEST)');
+  console.log('\n🏆 MISSION 03 ACHIEVED (SFIA Level 3–4: PRTS & NFTS)');
   process.exit(0);
 } else {
   process.exit(1);
