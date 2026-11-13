@@ -1,21 +1,19 @@
-# 🎯 Mission 03: Process State Machine Verification, Event Tracking & API Mocking (`PRTS` & `NFTS`)
+# 🎯 Mission 04: Performance Metrics & Non-Functional Load Thresholds (`QUAS`)
 
 ## 📋 Scenario & Objective
-At **LogiStream Enterprise**, global freight shipments move through a deterministic **Process State Machine (`PRTS`)**: `PENDING_DISPATCH` ➔ `IN_TRANSIT` ➔ `CUSTOMS_HOLD` ➔ `OUT_FOR_DELIVERY` ➔ `DELIVERED`. 
-
-When backend ledger services or telemetry event streams lag, automated tests must verify that UI state transitions and analytics dispatch events remain perfectly synchronized without causing UI deadlocks or silent failures (**Non-Functional Testing - `NFTS`**).
+At **LogiStream Enterprise**, cargo dispatch speeds and API response times directly impact international customs clearance windows. In senior-level Quality Engineering (**SFIA Level 4 - `QUAS`**), functional correctness is not enough—you must also enforce non-functional performance budgets and resource utilization metrics.
 
 In this mission, you will:
-1. **Verify Process State Transitions (`PRTS`):** Assert that sequential shipment states update correctly across UI dashboard components.
-2. **Intercept and Validate Telemetry Event Traces (`NFTS`):** Use Playwright's `page.route()` to spy on asynchronous metrics and analytics payloads (`/api/telemetry/events`) during state changes.
-3. **Mock Ledger Responses:** Simulate delayed or asynchronous backend updates to ensure robust test execution timing.
+1. **Measure Core Web Vitals & Navigation Timings:** Use Playwright's `page.evaluate()` and performance timing APIs to measure DOM content loaded and network idle times.
+2. **Enforce Non-Functional Performance Budgets (`QUAS`):** Assert that dashboard load times and manifest list rendering remain strictly below threshold limits (e.g., `< 1500ms`).
+3. **Analyze API Latency under Load:** Verify that backend search and filtering endpoints respond within acceptable SLA limits during high-throughput queries.
 
 ---
 
-## 🚀 Step 1: Accessing the `mission-03` Branch in GitHub Codespaces
+## 🚀 Step 1: Accessing the `mission-04` Branch in GitHub Codespaces
 
-1. Go to your **`logistream-enterprise-qa`** repository on GitHub and switch to the **`mission-03`** branch.
-2. Open your Codespace and ensure your application server is running:
+1. Go to your **`logistream-enterprise-qa`** repository on GitHub and switch to the **`mission-04`** branch.
+2. Open your Codespace and make sure your server is running:
    ```bash
    npm install
    npm start
