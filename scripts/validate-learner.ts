@@ -9,7 +9,8 @@ console.log('====================================================\n');
 let score = 0;
 const totalPoints = 100;
 
-// Determine active mission based on existing spec files
+// Determine active mission based on existing workflow or spec files
+const isMission06 = fs.existsSync(path.join(__dirname, '..', '.github/workflows/playwright-ci.yml'));
 const isMission05 = fs.existsSync(path.join(__dirname, '..', 'tests/accessibility-contract.spec.ts'));
 const isMission04 = fs.existsSync(path.join(__dirname, '..', 'tests/performance-budget.spec.ts'));
 const isMission03 = fs.existsSync(path.join(__dirname, '..', 'tests/shipment-state-machine.spec.ts'));
@@ -18,7 +19,10 @@ const isMission02 = fs.existsSync(path.join(__dirname, '..', 'tests/customs-uat.
 let missionName = 'Mission 01';
 let specFile = 'tests/dispatch-dashboard.spec.ts';
 
-if (isMission05) {
+if (isMission06) {
+  missionName = 'Mission 06';
+  specFile = 'tests/dispatch-dashboard.spec.ts';
+} else if (isMission05) {
   missionName = 'Mission 05';
   specFile = 'tests/accessibility-contract.spec.ts';
 } else if (isMission04) {
@@ -34,7 +38,7 @@ if (isMission05) {
 
 console.log(`🎯 Active Mission Detected: ${missionName}\n`);
 
-// Common checks across all missions
+// Common configuration checks
 const tsConfigPath = path.join(__dirname, '..', 'tsconfig.json');
 if (!fs.existsSync(tsConfigPath)) {
   console.error(`❌ Missing required file: tsconfig.json`);
