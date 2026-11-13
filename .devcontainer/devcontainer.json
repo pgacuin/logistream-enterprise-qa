@@ -1,6 +1,6 @@
 {
   "name": "LogiStream Enterprise QA Workspace",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bookworm",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -10,6 +10,6 @@
       ]
     }
   },
-  "postCreateCommand": "npm install && npx playwright install --with-deps",
+  "postCreateCommand": "npm install && npx playwright install",
   "remoteUser": "node"
 }
