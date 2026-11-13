@@ -1,21 +1,21 @@
-# 🎯 Mission 02: Multi-Role UAT, API State Seeding & Network Fault Injection (`BPTS` & `TEST`)
+# 🎯 Mission 03: Process State Machine Verification, Event Tracking & API Mocking (`PRTS` & `NFTS`)
 
 ## 📋 Scenario & Objective
-At **LogiStream Enterprise**, freight manifests move across distinct business acceptance gates before leaving the port. Relying solely on happy-path UI flows leaves critical gaps in **User Acceptance Testing (`BPTS`)**—especially when customs clearance APIs degrade or return transient `503 Service Unavailable` errors.
+At **LogiStream Enterprise**, global freight shipments move through a deterministic **Process State Machine (`PRTS`)**: `PENDING_DISPATCH` ➔ `IN_TRANSIT` ➔ `CUSTOMS_HOLD` ➔ `OUT_FOR_DELIVERY` ➔ `DELIVERED`. 
 
-In this mission, you will move beyond basic UI checks to validate end-to-end business acceptance criteria by:
-1. **Seeding Complex Business State via API (`APIRequestContext`):** Bypass slow multi-step UI forms by seeding a pending customs manifest directly through `/api/shipments/seed` before opening the browser.
-2. **Validating Business Acceptance Criteria (`BPTS`):** Verify that customs clearance rules (weight thresholds, hazard flags, and broker approval states) behave accurately against business requirements.
-3. **Injecting Network Faults (`page.route`):** Intercept live API calls to simulate a `503 Service Unavailable` gateway failure and verify that the UI gracefully displays a retry banner instead of crashing.
+When backend ledger services or telemetry event streams lag, automated tests must verify that UI state transitions and analytics dispatch events remain perfectly synchronized without causing UI deadlocks or silent failures (**Non-Functional Testing - `NFTS`**).
+
+In this mission, you will:
+1. **Verify Process State Transitions (`PRTS`):** Assert that sequential shipment states update correctly across UI dashboard components.
+2. **Intercept and Validate Telemetry Event Traces (`NFTS`):** Use Playwright's `page.route()` to spy on asynchronous metrics and analytics payloads (`/api/telemetry/events`) during state changes.
+3. **Mock Ledger Responses:** Simulate delayed or asynchronous backend updates to ensure robust test execution timing.
 
 ---
 
-## 🚀 Step 1: Accessing the `mission-02` Branch in GitHub Codespaces
+## 🚀 Step 1: Accessing the `mission-03` Branch in GitHub Codespaces
 
-1. Navigate to **`logistream-enterprise-qa`** on GitHub.
-2. Switch to the **`mission-02`** branch using the branch dropdown.
-3. Open your existing Codespace (or create a new one on `mission-02`).
-4. In your terminal, install packages and start the LogiStream server in a separate terminal tab:
+1. Go to your **`logistream-enterprise-qa`** repository on GitHub and switch to the **`mission-03`** branch.
+2. Open your Codespace and ensure your application server is running:
    ```bash
    npm install
    npm start
