@@ -9,7 +9,8 @@ console.log('====================================================\n');
 let score = 0;
 const totalPoints = 100;
 
-// Determine active mission based on existing workflow or spec files
+// Determine active mission based on existing spec files
+const isMission07 = fs.existsSync(path.join(__dirname, '..', 'tests/incident-simulation.spec.ts'));
 const isMission06 = fs.existsSync(path.join(__dirname, '..', '.github/workflows/playwright-ci.yml'));
 const isMission05 = fs.existsSync(path.join(__dirname, '..', 'tests/accessibility-contract.spec.ts'));
 const isMission04 = fs.existsSync(path.join(__dirname, '..', 'tests/performance-budget.spec.ts'));
@@ -19,7 +20,10 @@ const isMission02 = fs.existsSync(path.join(__dirname, '..', 'tests/customs-uat.
 let missionName = 'Mission 01';
 let specFile = 'tests/dispatch-dashboard.spec.ts';
 
-if (isMission06) {
+if (isMission07) {
+  missionName = 'Mission 07 (Capstone)';
+  specFile = 'tests/incident-simulation.spec.ts';
+} else if (isMission06) {
   missionName = 'Mission 06';
   specFile = 'tests/dispatch-dashboard.spec.ts';
 } else if (isMission05) {
@@ -59,7 +63,7 @@ function scanDirectory(dir: string) {
     } else if (fullPath.endsWith('.ts')) {
       const content = fs.readFileSync(fullPath, 'utf8');
       if (content.includes('TODO FOR LEARNER')) {
-        console.error(`❌ Incomplete implementation in ${path.relative(path.join(__dirname, '..'), fullPath)}: Remove all TODO markers.`);
+        console.error(`❌ Incomplete implementation in ${path.relative(path.join(__dirname, '..', fullPath)}: Remove all TODO markers.`);
         process.exit(1);
       }
       if (content.includes('waitForTimeout')) {
@@ -99,7 +103,7 @@ console.log(`  FINAL GRADE: ${score} / ${totalPoints}`);
 console.log(`====================================================`);
 
 if (score === 100) {
-  console.log(`\n🏆 ${missionName.toUpperCase()} ACHIEVED (SFIA Level 3–4)`);
+  console.log(`\n🏆 FULL CURRICULUM COMPLETED: SFIA LEVEL 3–4 QA AUTOMATION EXPERT CERTIFIED! 🚀`);
   process.exit(0);
 } else {
   process.exit(1);
