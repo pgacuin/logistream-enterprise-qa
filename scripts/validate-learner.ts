@@ -10,6 +10,7 @@ let score = 0;
 const totalPoints = 100;
 
 // Determine active mission based on existing spec files
+const isMission05 = fs.existsSync(path.join(__dirname, '..', 'tests/accessibility-contract.spec.ts'));
 const isMission04 = fs.existsSync(path.join(__dirname, '..', 'tests/performance-budget.spec.ts'));
 const isMission03 = fs.existsSync(path.join(__dirname, '..', 'tests/shipment-state-machine.spec.ts'));
 const isMission02 = fs.existsSync(path.join(__dirname, '..', 'tests/customs-uat.spec.ts'));
@@ -17,7 +18,10 @@ const isMission02 = fs.existsSync(path.join(__dirname, '..', 'tests/customs-uat.
 let missionName = 'Mission 01';
 let specFile = 'tests/dispatch-dashboard.spec.ts';
 
-if (isMission04) {
+if (isMission05) {
+  missionName = 'Mission 05';
+  specFile = 'tests/accessibility-contract.spec.ts';
+} else if (isMission04) {
   missionName = 'Mission 04';
   specFile = 'tests/performance-budget.spec.ts';
 } else if (isMission03) {
@@ -42,6 +46,7 @@ const srcDir = path.join(__dirname, '..', 'src');
 const testsDir = path.join(__dirname, '..', 'tests');
 
 function scanDirectory(dir: string) {
+  if (!fs.existsSync(dir)) return;
   const files = fs.readdirSync(dir);
   for (const file of files) {
     const fullPath = path.join(dir, file);
